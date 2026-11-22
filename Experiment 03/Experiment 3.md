@@ -1,49 +1,77 @@
-Experiment 3: Packet Capturing and Analyzing with Wireshark
+# Experiment 3: Packet Capturing and Analyzing with Wireshark
 
-1. Theory
+## 1. Theory
+
 Wireshark is an open-source packet analyzer that captures raw network traffic from a Network Interface Card (NIC) by placing it into promiscuous mode via packet capture libraries (libpcap on Linux/macOS, Npcap on Windows). Captured frames are decoded across the OSI model layers:
-- Layer 2 (Data Link): Ethernet frames, MAC addresses.
-- Layer 3 (Network): IPv4 / IPv6 addresses, ICMP.
-- Layer 4 (Transport): TCP / UDP segments, port numbers, flags (SYN, ACK, FIN, RST).
-- Layer 7 (Application): Application-layer payloads such as HTTP, DNS, DHCP, and FTP.
 
-2. Installation Commands
+- **Layer 2 (Data Link):** Ethernet frames, MAC addresses.
+- **Layer 3 (Network):** IPv4 / IPv6 addresses, ICMP.
+- **Layer 4 (Transport):** TCP / UDP segments, port numbers, flags (SYN, ACK, FIN, RST).
+- **Layer 7 (Application):** Application-layer payloads such as HTTP, DNS, DHCP, and FTP.
 
-Ubuntu / Debian / Kali Linux:
+## 2. Installation Commands
+
+**Ubuntu / Debian / Kali Linux:**
+
+```bash
 sudo apt update && sudo apt install wireshark -y
+```
 
-Configure non-superuser packet capture privileges (Linux):
+**Configure non-superuser packet capture privileges (Linux):**
+
+```bash
 sudo dpkg-reconfigure wireshark-common
 sudo usermod -aG wireshark $USER
+```
 
-Windows / macOS:
+**Windows / macOS:**
+
 Download the official installer from https://www.wireshark.org/download.html
 (Note: Ensure "Install Npcap" is checked during the Windows installation process.)
 
-3. Practical Procedure
+## 3. Practical Procedure
+
 1. Launch Wireshark from the terminal or application menu:
+   ```bash
    wireshark &
+   ```
 2. Select the active network interface carrying traffic (e.g., eth0, wlan0, or Wi-Fi).
 3. Click the blue shark-fin button to start packet capture.
 4. Generate network traffic in a terminal or browser:
+   ```bash
    curl http://example.com
    nslookup google.com
+   ```
 5. Click the red square button in the toolbar to stop capturing packets.
 
-4. Useful Display Filters for Analysis
+## 4. Useful Display Filters for Analysis
 
-A. Filter DNS Traffic:
+### A. Filter DNS Traffic:
+
+```text
 dns
+```
+
 (Inspect Type A queries, transaction IDs, and resolved IP answers)
 
-B. Filter Insecure HTTP Requests:
+### B. Filter Insecure HTTP Requests:
+
+```text
 http.request.method == "GET" || http.request.method == "POST"
+```
 
-C. Filter TCP Three-Way Handshake SYN Packets:
+### C. Filter TCP Three-Way Handshake SYN Packets:
+
+```text
 tcp.flags.syn == 1
+```
 
-D. Filter by Host IP and Destination Port:
+### D. Filter by Host IP and Destination Port:
+
+```text
 ip.addr == 192.168.1.50 && tcp.port == 80
+```
 
-E. Stream Reassembly and Plaintext Extraction:
+### E. Stream Reassembly and Plaintext Extraction:
+
 Right-click any captured TCP segment -> Follow -> TCP Stream to view the complete reassembled conversation payload.
